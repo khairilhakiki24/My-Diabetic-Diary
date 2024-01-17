@@ -48,7 +48,7 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Catatan Aktivitas</h1>
 
-    <form id="catatanMakananForm">
+    <form id="catatanAktivitasForm">
         <div class="mb-3">
             <label for="namaPengguna" class="form-label">Nama Pengguna</label>
             <input type="text" class="form-control" id="namaPengguna" required>
@@ -73,15 +73,15 @@
             <input type="number" class="form-control" id="durasiAktivitas" required>
         </div>
 
-        <button type="button" class="btn btn-primary" onclick="simpanCatatan()">Simpan Catatan</button>
+        <button type="button" class="btn btn-primary" onclick="simpanCatatanAktivitas()">Simpan Catatan</button>
         <button type="button" class="btn btn-success" onclick="exportData()">Export Data</button>
         <button type="button" class="btn btn-info" onclick="importData()">Import Data</button>
     </form>
 
     <div class="mt-4">
         <h2>Daftar Aktivitas</h2>
-        <div id="daftarCatatan" class="row row-cols-1 row-cols-md-3 g-4">
-            <!-- Daftar catatan makanan akan ditampilkan di sini -->
+        <div id="daftarCatatanAktivitas" class="row row-cols-1 row-cols-md-3 g-4">
+            <!-- Daftar catatan aktivitas akan ditampilkan di sini -->
         </div>
     </div>
 </div>
@@ -90,33 +90,33 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    function simpanCatatan() {
+    function simpanCatatanAktivitas() {
         var namaPengguna = document.getElementById('namaPengguna').value;
         var namaAktivitas = document.getElementById('namaAktivitas').value;
         var jenisAktivitas = document.getElementById('jenisAktivitas').value;
         var durasiAktivitas = document.getElementById('durasiAktivitas').value;
 
-        var catatanMakanan = {
+        var catatanAktivitas = {
             namaPengguna,
             namaAktivitas,
             jenisAktivitas,
             durasiAktivitas
         };
 
-        var daftarCatatan = JSON.parse(localStorage.getItem('daftarCatatan')) || [];
-        daftarCatatan.push(catatanMakanan);
-        localStorage.setItem('daftarCatatan', JSON.stringify(daftarCatatan));
+        var daftarCatatanAktivitas = JSON.parse(localStorage.getItem('daftarCatatanAktivitas')) || [];
+        daftarCatatanAktivitas.push(catatanAktivitas);
+        localStorage.setItem('daftarCatatanAktivitas', JSON.stringify(daftarCatatanAktivitas));
 
-        tampilkanDaftarCatatan(daftarCatatan);
+        tampilkanDaftarCatatanAktivitas(daftarCatatanAktivitas);
 
-        document.getElementById('catatanMakananForm').reset();
+        document.getElementById('catatanAktivitasForm').reset();
     }
 
-    function tampilkanDaftarCatatan(daftarCatatan) {
-        var daftarCatatanElement = document.getElementById('daftarCatatan');
-        daftarCatatanElement.innerHTML = '';
+    function tampilkanDaftarCatatanAktivitas(daftarCatatanAktivitas) {
+        var daftarCatatanAktivitasElement = document.getElementById('daftarCatatanAktivitas');
+        daftarCatatanAktivitasElement.innerHTML = '';
 
-        daftarCatatan.forEach(function (catatan, index) {
+        daftarCatatanAktivitas.forEach(function (catatan, index) {
             var card = document.createElement('div');
             card.className = 'col mb-4';
             card.innerHTML = `
@@ -128,28 +128,28 @@
                             Jenis Aktivitas: ${catatan.jenisAktivitas} <br>
                             Durasi Aktivitas: ${catatan.durasiAktivitas} menit
                         </p>
-                        <button type="button" class="btn btn-danger" onclick="hapusCatatan(${index})">Hapus</button>
+                        <button type="button" class="btn btn-danger" onclick="hapusCatatanAktivitas(${index})">Hapus</button>
                     </div>
                 </div>
             `;
-            daftarCatatanElement.appendChild(card);
+            daftarCatatanAktivitasElement.appendChild(card);
         });
     }
 
-    function hapusCatatan(index) {
-        var daftarCatatan = JSON.parse(localStorage.getItem('daftarCatatan')) || [];
-        daftarCatatan.splice(index, 1);
-        localStorage.setItem('daftarCatatan', JSON.stringify(daftarCatatan));
-        tampilkanDaftarCatatan(daftarCatatan);
+    function hapusCatatanAktivitas(index) {
+        var daftarCatatanAktivitas = JSON.parse(localStorage.getItem('daftarCatatanAktivitas')) || [];
+        daftarCatatanAktivitas.splice(index, 1);
+        localStorage.setItem('daftarCatatanAktivitas', JSON.stringify(daftarCatatanAktivitas));
+        tampilkanDaftarCatatanAktivitas(daftarCatatanAktivitas);
     }
 
     function exportData() {
-        var jsonExport = JSON.stringify(JSON.parse(localStorage.getItem('daftarCatatan')));
+        var jsonExport = JSON.stringify(JSON.parse(localStorage.getItem('daftarCatatanAktivitas')));
         var blob = new Blob([jsonExport], { type: 'application/json' });
         var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
         a.href = url;
-        a.download = 'data_catatan_makanan.json';
+        a.download = 'data_catatan_aktivitas.json';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -165,8 +165,8 @@
                 var reader = new FileReader();
                 reader.onload = function (e) {
                     var data = JSON.parse(e.target.result);
-                    localStorage.setItem('daftarCatatan', JSON.stringify(data));
-                    tampilkanDaftarCatatan(data);
+                    localStorage.setItem('daftarCatatanAktivitas', JSON.stringify(data));
+                    tampilkanDaftarCatatanAktivitas(data);
                 };
                 reader.readAsText(file);
             }
@@ -174,9 +174,9 @@
         input.click();
     }
 
-    // Menampilkan daftar catatan makanan saat halaman dimuat
-    var daftarCatatanAwal = JSON.parse(localStorage.getItem('daftarCatatan')) || [];
-    tampilkanDaftarCatatan(daftarCatatanAwal);
+    // Menampilkan daftar catatan aktivitas saat halaman dimuat
+    var daftarCatatanAktivitasAwal = JSON.parse(localStorage.getItem('daftarCatatanAktivitas')) || [];
+    tampilkanDaftarCatatanAktivitas(daftarCatatanAktivitasAwal);
 </script>
 </body>
 </html>
