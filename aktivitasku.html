@@ -130,7 +130,7 @@
     }
 
     function exportData() {
-        var jsonExport = JSON.stringify(localStorage.getItem('daftarAktivitas'));
+        var jsonExport = localStorage.getItem('daftarAktivitas');
         var blob = new Blob([jsonExport], { type: 'application/json' });
         var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
@@ -151,8 +151,13 @@
                 var reader = new FileReader();
                 reader.onload = function (e) {
                     var data = JSON.parse(e.target.result);
-                    localStorage.setItem('daftarAktivitas', JSON.stringify(data));
-                    tampilkanDaftarAktivitas(data);
+                    // Pastikan data yang di-import adalah array (jika memang seharusnya array)
+                    if (Array.isArray(data)) {
+                        localStorage.setItem('daftarAktivitas', JSON.stringify(data));
+                        tampilkanDaftarAktivitas(data);
+                    } else {
+                        console.error('Data yang di-import tidak valid.');
+                    }
                 };
                 reader.readAsText(file);
             }
